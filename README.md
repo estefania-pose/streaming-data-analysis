@@ -73,5 +73,6 @@ El entregable final consta de un reporte visual desarrollado en **Power BI** (`.
 * `*.sql`: Consultas SQL de estructuración y análisis de datos.
 * `*.pbix`: Archivo de Power BI con el Dashboard interactivo.
 
-* ![Power BI Dashboard]<img width="709" height="301" alt="powerbi" src="https://github.com/user-attachments/assets/201f425f-7d7e-4a58-bc24-04a03bf93bbc" />
+* ![Power BI Dashboard]
+* <img width="709" height="301" alt="powerbi" src="https://github.com/user-attachments/assets/201f425f-7d7e-4a58-bc24-04a03bf93bbc" />
 
