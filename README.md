@@ -1,67 +1,76 @@
-# 🎬 Documentación de Limpieza de Datos (ETL) - Plataforma de Streaming
+# 🎬 Proyecto End-to-End: Análisis de Datos de Plataforma de Streaming
 
-Este repositorio contiene el proceso de **Exploración, Limpieza y Transformación (ETL)** aplicado sobre los conjuntos de datos en formato CSV de una **plataforma de streaming** (que incluye registros de usuarios, contenido, suscripciones, pagos, visualizaciones y reseñas), utilizando **Python** y la librería **Pandas**.
-
----
-
-## 📋 Resumen de Transformaciones
-
-A continuación se detallan los tratamientos de datos, imputaciones y correcciones aplicados en cada uno de los archivos:
-
-### 📺 `visualizaciones.csv` ➔ `visualizaciones_limpio.csv`
-* **Formato de Fechas:** Normalización de la columna `fecha` al tipo `datetime64` (`format='mixed'`).
-* **Estandarización de Texto:**
-  * `dispositivo`: Unificación de variantes de texto (ej. `'pc'` y `'smart tv'`) a sus formatos capitalizados (`'PC'`, `'Smart TV'`).
-  * `completado`: Eliminación de espacios (`str.strip()`) y capitalización (`str.title()`) para solucionar discrepancias entre mayúsculas y minúsculas (`'si'`, `'no'`).
-* **Tratamiento de Nulos:** Imputación de valores faltantes en `completado` con el valor `'No especificado'`.
-* **Outliers y Errores:** Aplicación de `clip(lower=0, upper=300)` sobre `minutos_vistos` para corregir números negativos y acotar valores atípicos superiores a 300 minutos.
+Este repositorio contiene un proyecto completo de **Análisis de Datos** (ETL, Modelado, Consultas y Visualización) sobre el ecosistema de una plataforma de streaming. El objetivo principal es transformar datos crudos sobre usuarios, contenido, suscripciones, pagos y visualizaciones para extraer insights clave sobre el negocio.
 
 ---
 
-### 💳 `suscripciones.csv` ➔ `suscripciones_limpio.csv`
-* **Formato de Fechas:** Conversión de `fecha_inicio` y `fecha_fin` al tipo de dato `datetime64`.
-* **Estandarización de Texto:** Limpieza de espacios y normalización de minúsculas en `metodo_pago` con `str.strip().str.title()`.
-* **Tratamiento de Nulos:** Imputación de registros faltantes en `motivo_baja` completando con `'Motivo no informado'` exclusivamente en filas que poseían una `fecha_fin` válida.
+## 🛠️ Tecnologías Utilizadas
+
+* **Python (Pandas & NumPy):** Exploración, limpieza y transformación de datos (ETL).
+* **SQL:** Consultas analíticas, agregaciones y estructuración de bases de datos relacionales.
+* **Power BI:** Diseños de tableros interactivos, métricas clave (DAX) y visualización de datos.
+* **Git & GitHub:** Control de versiones y documentación.
 
 ---
 
-### ⭐ `resenas.csv` ➔ `resenas_limpio.csv`
-* **Formato de Fechas:** Conversión de la columna `fecha` a `datetime64`.
-* **Corrección de Rangos:** Ajuste de puntajes fuera de la escala permitida (valores como `-1` o `6`) mediante `clip(lower=1, upper=5)` para encuadrar las valoraciones del 1 al 5.
+## 🔄 Flujo del Proyecto y Estructura
+┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+│  Datos Crudos   │ ────> │  ETL en Python  │ ────> │ Consultas SQL   │ ────> │ Reporte PowerBI │
+│   (Archivos CSV)│       │  (Pandas)       │       │ (Base de Datos) │       │   (Dashboard)   │
+└─────────────────┘       └─────────────────┘       └─────────────────┘       └─────────────────┘
 
 ---
 
-### 💵 `pagos.csv` ➔ `pagos_limpio.csv`
-* **Limpieza y Conversión de Tipos:**
-  * Remoción de símbolos monetarios y comas (`$`, `,`) en la columna `monto` mediante expresiones regulares y posterior conversión a tipo flotante (`float`).
-  * Parsing de la columna `fecha_pago` a tipo `datetime64`.
-* **Tratamiento de Nulos:**
-  * Imputación de montos nulos utilizando la mediana agrupada por `suscripcion_id`.
-  * Eliminación de las filas remanentes con valores nulos que no pudieron ser imputadas a través de la mediana del grupo.
+## 📊 1. Proceso de Limpieza y Transformación (Python / Pandas)
+
+Se procesaron y limpiaron los conjuntos de datos originales para resolver nulos, inconsistencias de formato y valores atípicos:
+
+* **`visualizaciones.csv` ➔ `visualizaciones_limpio.csv`:**
+  * Normalización de la columna `fecha` al tipo `datetime`.
+  * Estandarización de campos de texto (`dispositivo` a `'PC'`, `'Smart TV'`; `completado` a `'Sí'`, `'No'`).
+  * Tratamiento de valores faltantes y acotamiento de outliers en `minutos_vistos` (`clip` entre 0 y 300 min).
+* **`suscripciones.csv` ➔ `suscripciones_limpio.csv`:**
+  * Conversión de fechas de inicio y fin de membresía.
+  * Imputación de motivos de baja faltantes (`'Motivo no informado'`).
+* **`resenas.csv` ➔ `resenas_limpio.csv`:**
+  * Ajuste y validación de puntuaciones de 1 a 5 estrellas.
+* **`pagos.csv` ➔ `pagos_limpio.csv`:**
+  * Limpieza de caracteres monetarios (`$`, `,`) y conversión de montos a valores numéricos (`float`).
+  * Imputación de pagos nulos mediante la mediana por tipo de suscripción.
+* **`planes.csv` y `contenido.csv`:**
+  * Validaciones de integridad, géneros y rangos de lanzamiento.
 
 ---
 
-### 🎬 `planes.csv` y `contenido.csv`
-* **Validación de Integridad:** Confirmación de ausencia de filas duplicadas y revisión de coherencia en variables categóricas (`tipo`, `genero`, `rating_edad`) y rangos numéricos (`anio_lanzamiento`). Generación de sus correspondientes versiones limpias (`planes_limpio.csv` y `contenido_limpio.csv`).
+## 🗄️ 2. Análisis y Consultas (SQL)
+
+Con los datos procesados, se ejecutaron scripts en **SQL** (`.sql`) para modelar la información y responder preguntas de negocio clave, tales como:
+* Cálculo de ingresos totales por tipo de plan de suscripción.
+* Tasa de retención y análisis de cancelaciones (*Churn Rate*).
+* Títulos y géneros más populares según horas reproducidas y valoraciones.
+* Comportamiento del usuario por dispositivo utilizado.
 
 ---
 
-## 🛠️ Tecnologías y Librerías
+## 📈 3. Dashboard Interactivo (Power BI)
 
-* **Lenguaje:** Python 3.x
-* **Librerías:**
-  * `pandas`: Manipulación y transformación de DataFrames.
-  * `numpy`: Operaciones numéricas y manejo de estructuras vectorizadas.
+El entregable final consta de un reporte visual desarrollado en **Power BI** (`.pbix`) que permite interactuar con los datos clave:
+
+* **Métricas Principales (KPIs):** Total de ingresos, usuarios activos, total de horas vistas y calificación promedio.
+* **Análisis de Suscripciones:** Distribución de planes activos vs. cancelados.
+* **Consumo de Contenido:** Top de series/películas más vistas y desglose por categoría.
+* **Filtros Interactivos:** Por rango de fechas, dispositivo, país o tipo de plan.
+
+> 💡 *Nota: Para visualizar el reporte podés abrir el archivo `.pbix` en Power BI Desktop o consultar las capturas/PDF adjuntos en el repositorio.*
 
 ---
 
-## 📂 Archivos Generados
+## 📂 Archivos del Repositorio
 
-Los archivos exportados resultantes del proceso (guardados sin el índice por defecto de Pandas) son:
+* `*.ipynb` / `*.py`: Notebooks/scripts de Python con el proceso de limpieza ETL.
+* `*_limpio.csv`: Datasets transformados listos para análisis.
+* `*.sql`: Consultas SQL de estructuración y análisis de datos.
+* `*.pbix`: Archivo de Power BI con el Dashboard interactivo.
 
-* `visualizaciones_limpio.csv`
-* `suscripciones_limpio.csv`
-* `resenas_limpio.csv`
-* `pagos_limpio.csv`
-* `planes_limpio.csv`
-* `contenido_limpio.csv`
+* ![Power BI Dashboard](<img width="709" height="301" alt="powerbi" src="https://github.com/user-attachments/assets/201f425f-7d7e-4a58-bc24-04a03bf93bbc" />
+)
