@@ -15,11 +15,12 @@ Este repositorio contiene un proyecto completo de **Análisis de Datos** (ETL, M
 
 ## 🔄 Flujo del Proyecto y Estructura
 
+```
 ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│  Datos Crudos   │ ────> │  ETL en Python  │ ────> │ Consultas SQL   │ ────> │ Reporte PowerBI │
-│   (Archivos CSV)│       │  (Pandas)       │       │ (Base de Datos) │       │   (Dashboard)   │
+│  Datos Crudos   │ ────> │  ETL en Python  │ ────> │  Consultas SQL  │ ────> │ Reporte PowerBI │
+│  (Archivos CSV) │       │    (Pandas)     │       │ (Base de Datos) │       │   (Dashboard)   │
 └─────────────────┘       └─────────────────┘       └─────────────────┘       └─────────────────┘
-
+```
 ---
 
 ## 📊 1. Proceso de Limpieza y Transformación (Python / Pandas)
