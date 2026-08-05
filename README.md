@@ -1,6 +1,6 @@
-# 🧹 Documentación de Limpieza de Datos (ETL)
+# 🎬 Documentación de Limpieza de Datos (ETL) - Plataforma de Streaming
 
-Este repositorio contiene el proceso de **Exploración, Limpieza y Transformación (ETL)** realizado sobre los conjuntos de datos en formato CSV de la plataforma, utilizando **Python** y la librería **Pandas**.
+Este repositorio contiene el proceso de **Exploración, Limpieza y Transformación (ETL)** aplicado sobre los conjuntos de datos en formato CSV de una **plataforma de streaming** (que incluye registros de usuarios, contenido, suscripciones, pagos, visualizaciones y reseñas), utilizando **Python** y la librería **Pandas**.
 
 ---
 
